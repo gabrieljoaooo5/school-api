@@ -15,3 +15,18 @@ class EnrollmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Enrollment
         exclude = []
+
+class StudentEnrollmentsListSerializer(serializers.ModelSerializer):
+    course = serializers.ReadOnlyField(source='course.description')
+    type = serializers.SerializerMethodField()
+    class Meta:
+        model = Enrollment
+        fields = ['course', 'type']
+    def get_type(self, obj):
+        return obj.get_type_display()
+
+class EnrolledStudentsListSerializer(serializers.ModelSerializer):
+    student_name = serializers.ReadOnlyField(source='student.name')
+    class Meta:
+        model = Enrollment
+        fields = ['student_name']
