@@ -20,3 +20,12 @@ class Course(models.Model):
 
     def __str__(self):
         return self.description
+
+class Enrollment(models.Model):
+    TYPE = (
+        ('F', 'FULL-TIME'),
+        ('P', 'PART-TIME'),
+    )
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    type = models.CharField(max_length=1, choices=TYPE, blank=False, null=False,default='P')
