@@ -1,14 +1,18 @@
 from rest_framework import viewsets, generics
 from school.models import Student, Course, Enrollment
-from school.serializer import StudentSerializer, CourseSerializer, EnrollmentSerializer, StudentEnrollmentsListSerializer, EnrolledStudentsListSerializer
+from school.serializer import StudentSerializer, StudentSerializerV2, CourseSerializer, EnrollmentSerializer, StudentEnrollmentsListSerializer, EnrolledStudentsListSerializer
 from rest_framework.authentication import BasicAuthentication
 from rest_framework.permissions import IsAuthenticated
 
 class StudentsViewSet(viewsets.ModelViewSet):
     queryset = Student.objects.all()
-    serializer_class = StudentSerializer
     authentication_classes = [BasicAuthentication]
     permission_classes = [IsAuthenticated]
+    def get_serializer_class(self):
+        if (self.request.version == 'V2'):
+            return StudentSerializerV2
+        else:
+            return StudentSerializer
 
 class CoursesViewSet(viewsets.ModelViewSet):
     queryset = Course.objects.all()
