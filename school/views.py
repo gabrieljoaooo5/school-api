@@ -1,6 +1,8 @@
 from rest_framework import viewsets, generics
+from rest_framework import status
 from school.models import Student, Course, Enrollment
 from school.serializer import StudentSerializer, StudentSerializerV2, CourseSerializer, EnrollmentSerializer, StudentEnrollmentsListSerializer, EnrolledStudentsListSerializer
+from rest_framework.response import Response
 
 class StudentsViewSet(viewsets.ModelViewSet):
     queryset = Student.objects.all()
@@ -13,6 +15,15 @@ class StudentsViewSet(viewsets.ModelViewSet):
 class CoursesViewSet(viewsets.ModelViewSet):
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
+
+    def create(self, request):
+        serializer = self.serializer_class(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            response = Response(serializer.data, status=status.HTTP_201_CREATED)
+            id = str(serializer.data['id'])
+            response['Location'] = request.build_absolute_uri() + id
+            return response
 
 class EnrollmentsViewSet(viewsets.ModelViewSet):
     queryset = Enrollment.objects.all()
