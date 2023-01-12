@@ -11,7 +11,8 @@ router.register('courses', CoursesViewSet, basename='Courses')
 router.register('enrollments', EnrollmentsViewSet, basename='Enrollments')
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('admin/', include('admin_honeypot.urls', namespace='admin_honeypot')),
+    path('admin-panel/', admin.site.urls),
     path('', include(router.urls) ),
     path('students/<int:pk>/enrollments/', StudentEnrollmentsList.as_view()),
     path('courses/<int:pk>/enrollments/', EnrolledStudentsList.as_view())
